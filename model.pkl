@@ -6,24 +6,17 @@ import joblib
 # Load dataset
 df = pd.read_csv("dataset.csv")
 
-# Convert categorical columns to numbers
+# Encode categorical
 df["College_Tier"] = df["College_Tier"].astype("category").cat.codes
 df["Program_Type"] = df["Program_Type"].astype("category").cat.codes
 
-# Features
+# Features & target
 X = df[["Final_Price", "Discount_%", "Family_Income", "College_Tier", "Program_Type"]]
-
-# Target
 y = df["Converted"]
-
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 # Train model
 model = LogisticRegression(max_iter=1000)
-model.fit(X_train, y_train)
+model.fit(X, y)
 
-# Save model
+# Save model (IMPORTANT)
 joblib.dump(model, "model.pkl")
-
-print("Model created successfully!")
