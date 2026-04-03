@@ -1,12 +1,14 @@
 import streamlit as st
 import pandas as pd
 import pickle
-
+import joblib
 st.title("💰 PragyanAI Pricing Intelligence Engine")
 
 # Load data
 df = pd.read_csv("dataset.csv")
 
+
+model = joblib.load("model.pkl")
 
 # Sidebar inputs
 st.sidebar.header("Student Profile")
