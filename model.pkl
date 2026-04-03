@@ -1,18 +1,29 @@
-# train.py
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-import pickle
+import joblib
 
-df = pd.read_csv("your_dataset.csv")
+# Load dataset
+df = pd.read_csv("dataset.csv")
 
-X = df[["Family_Income", "Discount_%", "College_Tier"]]
+# Convert categorical columns to numbers
+df["College_Tier"] = df["College_Tier"].astype("category").cat.codes
+df["Program_Type"] = df["Program_Type"].astype("category").cat.codes
+
+# Features
+X = df[["Final_Price", "Discount_%", "Family_Income", "College_Tier", "Program_Type"]]
+
+# Target
 y = df["Converted"]
 
-X_train, X_test, y_train, y_test = train_test_split(X, y)
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-model = LogisticRegression()
+# Train model
+model = LogisticRegression(max_iter=1000)
 model.fit(X_train, y_train)
 
-# STEP 5 → Save model
-pickle.dump(model, open("model/model.pkl", "wb"))
+# Save model
+joblib.dump(model, "model.pkl")
+
+print("Model created successfully!")
