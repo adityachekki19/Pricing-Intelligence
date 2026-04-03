@@ -1,9 +1,19 @@
 import streamlit as st
 import pandas as pd
-import joblib
+df = pd.read_csv("dataset.csv")
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
 
-# Load model
-model = joblib.load("model.pkl")
+# Features & Target
+X = df[["Base_Price", "Discount_%"]]
+y = df["Converted"]
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# Train model
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
 
 st.title("💰 PragyanAI Pricing Intelligence")
 
