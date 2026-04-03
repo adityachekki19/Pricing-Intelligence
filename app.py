@@ -14,13 +14,12 @@ program_map = {"DS": 0, "AI": 1, "GenAI": 2}
 df["College_Tier"] = df["College_Tier"].map(tier_map)
 df["Program_Type"] = df["Program_Type"].map(program_map)
 
-# Features & Target
+# ✅ USE ALL FEATURES
 X = df[["Base_Price", "Discount_%", "Family_Income", "College_Tier", "Program_Type"]]
 y = df["Converted"]
 
 # Train model
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-
 model = RandomForestClassifier()
 model.fit(X_train, y_train)
 
@@ -45,10 +44,7 @@ if st.button("Predict"):
 
     if prediction == 1:
         st.success("✅ High Conversion Chance")
-        st.metric("Expected Revenue", f"₹{price}")
+        st.metric("Revenue", f"₹{price}")
     else:
         st.error("❌ Low Conversion Chance")
-        st.metric("Expected Revenue", "₹0")
-
-# Bonus insight
-st.info("💡 Recommended Discount: 20% gives highest conversion")
+        st.metric("Revenue", "₹0")
