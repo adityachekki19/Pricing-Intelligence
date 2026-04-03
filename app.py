@@ -1,34 +1,32 @@
 import streamlit as st
 import pandas as pd
-import pickle
 import joblib
-st.title("💰 PragyanAI Pricing Intelligence Engine")
 
-# Load data
+# Load dataset
 df = pd.read_csv("dataset.csv")
 
-
+# Load model
 model = joblib.load("model.pkl")
 
-# Sidebar inputs
-st.sidebar.header("Student Profile")
+st.title("💰 PragyanAI Pricing Intelligence")
 
-income = st.sidebar.selectbox("Family Income", df['Family_Income'].unique())
-program = st.sidebar.selectbox("Program", df['Program_Type'].unique())
-discount = st.sidebar.slider("Discount %", 0, 50, 20)
+st.write("Enter student details to predict conversion & revenue")
 
-# Filter sample
-sample = df.iloc[0].copy()
+# Inputs
+price = st.number_input("Final Price", min_value=10000, max_value=300000, value=90000)
+discount = st.slider("Discount %", 0, 50, 20)
+income = st.number_input("Family Income", min_value=100000, max_value=2000000, value=500000)
+cgpa = st.slider("CGPA", 0.0, 10.0, 7.5)
 
-sample['Family_Income'] = income
-sample['Discount_%'] = discount
+# Prediction
+if st.button("Predict"):
+    input_data = [[price, discount, income, cgpa]]
+    prediction = model.predict(input_data)[0]
 
-# Predict
-prediction = model.predict([sample.drop(['Converted','Revenue'], errors='ignore')])[0]
+    if prediction == 1:
+        st.success("✅ High chance of conversion")
+    else:
+        st.error("❌ Low chance of conversion")
 
-st.subheader("Prediction")
-st.write("Conversion Probability:", prediction)
-
-# Visualization
-st.subheader("Price vs Conversion")
-st.line_chart(df.groupby('Final_Price')['Converted'].mean())
+    revenue = price if prediction == 1 else 0
+    st.metric("Estimated Revenue", f"₹{revenue}")
