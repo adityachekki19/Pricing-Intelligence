@@ -1,22 +1,25 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 import joblib
 
 # Load dataset
 df = pd.read_csv("dataset.csv")
 
-# Encode categorical
-df["College_Tier"] = df["College_Tier"].astype("category").cat.codes
-df["Program_Type"] = df["Program_Type"].astype("category").cat.codes
+# Encode categorical (Match the mapping in your app.py)
+tier_map = {"Tier 1": 0, "Tier 2": 1, "Tier 3": 2}
+program_map = {"DS": 0, "AI": 1, "GenAI": 2}
 
-# Features & target
-X = df[["Final_Price", "Discount_%", "Family_Income", "College_Tier", "Program_Type"]]
+df["College_Tier"] = df["College_Tier"].map(tier_map)
+df["Program_Type"] = df["Program_Type"].map(program_map)
+
+# Features & target - Use "Base_Price" to match your Streamlit app
+feature_cols = ["Base_Price", "Discount_%", "Family_Income", "College_Tier", "Program_Type"]
+X = df[feature_cols]
 y = df["Converted"]
 
 # Train model
 model = LogisticRegression(max_iter=1000)
 model.fit(X, y)
 
-# Save model (IMPORTANT)
+# Save model as a BINARY file
 joblib.dump(model, "model.pkl")
