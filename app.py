@@ -5,14 +5,10 @@ import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
-
-st.write("Current working directory:", os.getcwd())
-st.write("Files here:", os.listdir())
-st.write("Files in data folder:", os.listdir("data") if os.path.exists("data") else "No data folder")
 st.title("💰 PragyanAI Pricing Intelligence")
 
 # --- Load dataset safely ---
-file_path = os.path.join("data", "dataset.csv")
+file_path = "dataset.csv"  # CSV is in root folder
 try:
     df = pd.read_csv(file_path)
     st.success("Dataset loaded successfully ✅")
