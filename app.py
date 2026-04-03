@@ -5,10 +5,8 @@ import pickle
 st.title("💰 PragyanAI Pricing Intelligence Engine")
 
 # Load data
-df = pd.read_csv("data/dataset.csv")
+df = pd.read_csv("dataset.csv")
 
-# Load model
-model = pickle.load(open("model/model.pkl", "rb"))
 
 # Sidebar inputs
 st.sidebar.header("Student Profile")
