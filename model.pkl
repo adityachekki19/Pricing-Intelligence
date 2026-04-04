@@ -4,22 +4,31 @@ import joblib
 
 # Load dataset
 df = pd.read_csv("dataset.csv")
+print(f"✅ Loaded {len(df)} records")
 
-# Encode categorical (Match the mapping in your app.py)
-tier_map = {"Tier 1": 0, "Tier 2": 1, "Tier 3": 2}
+# Encode categorical (Match app.py exactly)
+tier_map = {"Tier 1": 0, "Tier 2": 1, "Tier 3": 2, "Tier 4": 3}
 program_map = {"DS": 0, "AI": 1, "GenAI": 2}
 
-df["College_Tier"] = df["College_Tier"].map(tier_map)
-df["Program_Type"] = df["Program_Type"].map(program_map)
+df["College_Tier"] = df["College_Tier"].map(tier_map).fillna(-1).astype(int)
+df["Program_Type"] = df["Program_Type"].map(program_map).fillna(-1).astype(int)
 
-# Features & target - Use "Base_Price" to match your Streamlit app
+# Features & target - EXACT match with app.py
 feature_cols = ["Base_Price", "Discount_%", "Family_Income", "College_Tier", "Program_Type"]
 X = df[feature_cols]
 y = df["Converted"]
 
-# Train model
-model = LogisticRegression(max_iter=1000)
+print(f"✅ Features: {feature_cols}")
+print(f"✅ Target distribution:\n{y.value_counts(normalize=True)}")
+
+# Train Logistic Regression (Your choice)
+model = LogisticRegression(max_iter=1000, random_state=42)
 model.fit(X, y)
 
-# Save model as a BINARY file
+# Save as BINARY file
 joblib.dump(model, "model.pkl")
+print("✅ Model saved as model.pkl")
+
+# Performance
+train_score = model.score(X, y)
+print(f"✅ Training Accuracy: {train_score:.2%}")
